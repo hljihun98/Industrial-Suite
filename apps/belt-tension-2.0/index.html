@@ -197,12 +197,12 @@
   <section class="panel" style="margin-top:10px;" id="waveformSection">
     <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
       <span style="font-size:13px;font-weight:700;color:#111;">파형 · 타이밍 가이드</span>
-      <span id="guideChip" class="assist-chip assist-chip-guide" style="display:none;">가이드 ON
+      <span id="guideChip" class="assist-chip assist-chip-guide" style="display:inline-flex;">가이드 ON
         <button class="guide-period-btn is-active" data-period="3000" type="button">3 s</button>
         <button class="guide-period-btn" data-period="4000" type="button">4 s</button>
         <button class="guide-period-btn" data-period="5000" type="button">5 s</button>
       </span>
-      <button id="swGuide" class="switch" type="button" aria-pressed="false" aria-label="타이밍 가이드" style="margin-left:auto;"><span class="knob"></span></button>
+      <button id="swGuide" class="switch on" type="button" aria-pressed="true" aria-label="타이밍 가이드" style="margin-left:auto;"><span class="knob"></span></button>
     </div>
     <div class="canvas-box waveform-box"><canvas id="waveform"></canvas></div>
   </section>

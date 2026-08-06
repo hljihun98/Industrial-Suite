@@ -83,7 +83,7 @@ let activeSlotIdx=0;       // 현재 slots[] 인덱스
 let measureStartTs=0;
 let collecting=false, strikeTs=0, collectStartTs=0, collectEndTs=0, collectedSnapshots=[];
 let lastStrikeAt=0;
-let guideActive=false, guideStartTs=0, guidePeriodMs=3000, guidePeakFired=false;
+let guideActive=true, guideStartTs=Date.now(), guidePeriodMs=3000, guidePeakFired=false;  // 타이밍 가이드 기본 ON
 let collectionMaxRms=0;
 let noiseReduction={enabled:false};
 let noiseProfile=null;
@@ -809,6 +809,7 @@ async function startMeasure(){
   nrHintShown=false; unstableCount=0;
   ambientRms=0.02;    // 측정 시작 시 기준선 리셋 (filterStrength=2 기준 초기 임계값 ≈ 0.08)
   measureStartTs=Date.now();
+  guideStartTs=measureStartTs; guidePeakFired=false;  // 사인파 위상을 측정 시작점부터 새로 시작
   btnStart.disabled=true; btnStop.disabled=false; btnSave.disabled=true;
   setStep(2);
   selFFT.disabled=true;
@@ -834,11 +835,11 @@ function stopMeasure(){
   meterFill.style.width='0%'; meterVal.textContent='0%';
   liveFreq.textContent='--'; livePeak.textContent='대기'; livePeak.style.color='var(--muted)';
   if(waveformBuf){ waveformBuf.fill(128); drawWaveform(); }
-  guideActive=false; guidePeakFired=false;
+  guideActive=true; guidePeakFired=false;  // 기본값(ON)으로 복귀
   learnLastTs=null;  // 측정 중지 시 학습 타이머 일시 정지 (재시작 시 시간 점프 방지)
   const swG=$('swGuide');
-  if(swG){ swG.setAttribute('aria-pressed','false'); swG.classList.remove('on'); }
-  const chip=$('guideChip'); if(chip) chip.style.display='none';
+  if(swG){ swG.setAttribute('aria-pressed','true'); swG.classList.add('on'); }
+  const chip=$('guideChip'); if(chip) chip.style.display='inline-flex';
 }
 
 /* ================================================================
@@ -1944,7 +1945,7 @@ function applyAdaptiveTriggerUI(){
   if(waveSection) waveSection.style.display=adaptiveTrigger?'':'none';
   if(!adaptiveTrigger && guideActive){
     guideActive=false;
-    if(swGuide) swGuide.setAttribute('aria-pressed','false');
+    if(swGuide){ swGuide.setAttribute('aria-pressed','false'); swGuide.classList.remove('on'); }
     const chip=document.getElementById('guideChip');
     if(chip) chip.style.display='none';
   }

@@ -64,6 +64,14 @@
 - ON 상태: 주변 RMS 기반 동적 임계값으로 충격 감지 후 1.5s 분석 (V2 방식)
 - `applyAdaptiveTriggerUI()` 함수가 waveformSection 표시/숨김 처리
 
+### 파형 타이밍 가이드 (guideActive)
+- **기본값: ON** (`let guideActive=true, guideStartTs=Date.now()`)
+- `index.html` 의 `#swGuide` 는 `aria-pressed="true" class="switch on"`, `#guideChip` 은 `display:inline-flex` 로 초기 상태를 맞춰야 함 (JS 초기값과 마크업이 어긋나면 스위치 표시가 실제 상태와 불일치)
+- `analyzeLoop()` 에서 `guideActive` 분기가 `adaptiveTrigger` 보다 **먼저** 평가되므로, adaptiveTrigger 가 OFF 여도 가이드의 사인파 피크 자동 트리거는 정상 동작함
+- `startMeasure()` 에서 `guideStartTs` 를 측정 시작 시각으로 리셋 — 안 하면 페이지 로드 후 경과된 위상 때문에 시작 직후 피크가 즉시 발화할 수 있음
+- `stopMeasure()` 는 가이드를 OFF 로 끄지 않고 **기본값 ON 으로 복귀**시킴
+- 단, adaptiveTrigger 를 OFF 로 토글하면 `applyAdaptiveTriggerUI()` 가 가이드를 강제 OFF (기존 의도된 동작)
+
 ### 측정대상 고정 (targetLock)
 - **기본값: ON** (`let targetLock={enabled:true, widthPct:30}`)
 
